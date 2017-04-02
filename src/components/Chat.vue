@@ -1,0 +1,120 @@
+<template>
+  <div class="wrapper">
+    <channels></channels>
+
+    <div class="chat">
+      <div class="chat-head">
+        <h4>{{ getCurrentChat }}</h4>
+      </div>
+      <div class="chat-body" @click="focusChatInput" id="chat-body">
+        <div v-for="message in getMessages" v-if="message.channel == getCurrentChat && message.content.trim() !== ''" class="chat-message">
+          {{ message.content }}
+        </div>
+      </div>
+      <form class="chat-input">
+        <input id="chat-input" autofocus autocomplete="off" type="text" name="chat-msg" v-model="chatInput" placeholder="Send a message">
+        <button type="submit" class="button" @click="sendMessage($event, getCurrentChat)">Chat</button>
+      </form>
+    </div>
+
+    <membersList></membersList>
+  </div>
+</template>
+
+<script>
+import membersList from '@/components/MembersList'
+import channels from '@/components/Channels'
+import {mapGetters} from 'vuex'
+
+export default {
+  name: 'chat',
+  data() {
+    return {
+      chatInput: ''
+    }
+  },
+  methods: {
+    sendMessage(e, chatName) {
+      e.preventDefault()
+
+      this.$store.commit('addMessage', { channel: chatName, content: this.chatInput })
+      this.chatInput = ''
+
+      setTimout(() => {
+        const elem = document.getElementById('chat-body');
+        elem.scrollTop = elem.scrollHeight;
+      }, 10)
+    },
+    focusChatInput() {
+      document.getElementById('chat-input').focus()
+    }
+  },
+  components: {
+    membersList,
+    channels
+  },
+  computed: {
+    ...mapGetters([
+      'getCurrentChat',
+      'getMessages'
+    ])
+  }
+}
+</script>
+
+<style lang="scss">
+.chat {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  & > .chat-body {
+    height: 100%;
+    overflow-y: auto;
+  }
+}
+h4 {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 15px;
+  text-align: center;
+  background: #ff5252;
+}
+.wrapper {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+}
+.chat-input {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #263238;
+
+  & > input {
+    flex: 1;
+    height: 50px;
+    border: none;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    color: white;
+    background: none;
+    font-size: 0.9rem;
+  }
+  & > button {
+    width: 200px;
+    border: none;
+    border-radius: 0;
+    height: 50px;
+  }
+}
+.chat-message {
+  height: 30px;
+  box-sizing: border-box;
+  padding: 5px 10px;
+
+  &:nth-child(even) {
+    background: rgba(0,0,0, 0.2);
+  }
+}
+</style>
