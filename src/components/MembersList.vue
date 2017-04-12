@@ -2,9 +2,9 @@
   <div class="members-list">
     <h4>Members</h4>
     <ul class="list">
-      <li v-for="member in getMembers" v-if="member.channel == getCurrentChat" class="member-item">
-        <img :src="member.img" :title="member.name" class="member-image">
-        <p class="member-name">{{ member.name }}</p>
+      <li v-for="member in getMembers" class="member-item">
+        <!-- <img :src="member.img" :title="member.name" class="member-image"> -->
+        <p class="member-name">{{ member }}</p>
       </li>
     </ul>
   </div>
@@ -18,7 +18,8 @@ export default {
   computed: {
     ...mapGetters([
       'getMembers',
-      'getCurrentChat'
+      'getCurrentChat',
+      'getCurrentUser'
     ])
   },
   methods: {
@@ -30,6 +31,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+$primaryColor: #37474f;
+$primaryColorDark: #263238;
+$colorAccent: #ff5252;
+$colorAccentDark: #d50000;
+$fontColor: #fafafa;
 
 .members-list {
   display: flex;
@@ -39,14 +45,14 @@ export default {
   overflow-y: auto;
 
   & > .list {
-    border-left: 2px solid #263238;
+    border-left: 2px solid $primaryColorDark;
     flex: 1;
     margin: 0;
     padding: 0;
   }
 
   & > h4 {
-    border-left: 2px solid #37474f;
+    border-left: 2px solid $primaryColor;
   }
 
   & .member-item {
@@ -56,7 +62,7 @@ export default {
     align-items: center;
 
     &:hover {
-      background: #263238;
+      background: $primaryColorDark;
     }
 
     & > .member-image {
@@ -64,7 +70,7 @@ export default {
       height: 30px;
       border-radius: 50%;
       overflow: hidden;
-      background: #263238;
+      background: $primaryColorDark;
     }
 
     & > .member-name {

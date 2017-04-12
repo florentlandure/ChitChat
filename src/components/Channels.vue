@@ -2,7 +2,7 @@
   <div class="channels-list">
     <h4>Channels</h4>
     <ul class="list">
-      <li v-for="channel in channels" :class="{current: isCurrentChat(channel.name)}" class="channel-item" @click="chooseChat(channel.name)">
+      <li v-for="channel in getChannels" :class="{current: isCurrentChat(channel.name)}" class="channel-item" @click="chooseChat(channel.name)">
         <p class="channel-name">{{ channel.name }}</p>
       </li>
     </ul>
@@ -25,12 +25,18 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'getCurrentChat'
+      'getCurrentChat',
+      'getCurrentUser',
+      'getChannels'
     ])
   },
   methods: {
     chooseChat(name) {
+      const currentChat = this.$store.getters.getCurrentChat
+      const currentUser = this.$store.getters.getCurrentUser
+
       this.$store.commit('switchChat', name)
+      this.$store.commit('addMemberToChannel', {channel: currentChat, username: currentUser})
       document.getElementById('chat-input').focus()
     },
     isCurrentChat(name) {

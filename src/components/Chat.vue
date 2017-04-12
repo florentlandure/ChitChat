@@ -7,8 +7,8 @@
         <h4>{{ getCurrentChat }}</h4>
       </div>
       <div class="chat-body" @click="focusChatInput" id="chat-body">
-        <div v-for="message in getMessages" v-if="message.channel == getCurrentChat && message.content.trim() !== ''" class="chat-message">
-          {{ message.content }}
+        <div v-for="message in getMessages" v-if="message.content.trim() !== ''" class="chat-message">
+          <span class="msg-from">{{message.username}}: </span> {{ message.content }}
         </div>
       </div>
       <form class="chat-input">
@@ -40,7 +40,7 @@ export default {
       this.$store.commit('addMessage', { channel: chatName, content: this.chatInput })
       this.chatInput = ''
 
-      setTimout(() => {
+      setTimeout(() => {
         const elem = document.getElementById('chat-body');
         elem.scrollTop = elem.scrollHeight;
       }, 10)
@@ -56,13 +56,20 @@ export default {
   computed: {
     ...mapGetters([
       'getCurrentChat',
-      'getMessages'
+      'getMessages',
+      'getCurrentUser'
     ])
   }
 }
 </script>
 
 <style lang="scss">
+$primaryColor: #37474f;
+$primaryColorDark: #263238;
+$colorAccent: #ff5252;
+$colorAccentDark: #d50000;
+$fontColor: #fafafa;
+
 .chat {
   flex: 3;
   display: flex;
@@ -79,7 +86,7 @@ h4 {
   margin: 0;
   padding: 15px;
   text-align: center;
-  background: #ff5252;
+  background: $colorAccent;
 }
 .wrapper {
   display: flex;
@@ -89,7 +96,7 @@ h4 {
 .chat-input {
   display: flex;
   align-items: center;
-  border-top: 1px solid #263238;
+  border-top: 1px solid $primaryColorDark;
 
   & > input {
     flex: 1;
@@ -112,6 +119,11 @@ h4 {
   height: 30px;
   box-sizing: border-box;
   padding: 5px 10px;
+
+  & .msg-from {
+    font-weight: bold;
+    color: $colorAccent;
+  }
 
   &:nth-child(even) {
     background: rgba(0,0,0, 0.2);

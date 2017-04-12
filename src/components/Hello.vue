@@ -4,10 +4,10 @@
     <h1>Welcome to Chit Chat</h1>
     <form>
       <input class="text-input" type="text" v-model="credentials.username" placeholder="Username">
-      <input class="text-input" type="password" v-model="credentials.password" placeholder="Password">
+      <!-- <input class="text-input" type="password" v-model="credentials.password" placeholder="Password"> -->
       <button type="submit" class="button" @click="submit">Log in</button>
     </form>
-    <p class="italic">Not registered yet ? <a href="/register">Sign up</a></p>
+    <!-- <p class="italic">Not registered yet ? <a href="/register">Sign up</a></p> -->
   </div>
 </template>
 
@@ -27,17 +27,23 @@ export default {
   methods: {
     submit (e) {
       e.preventDefault()
-      let credentials = {
-        username: this.credentials.username,
-        password: this.credentials.password
-      }
-      if(credentials.username === '' || credentials.password === '') {
-        this.showError('Username or password invalid')
+      let username = this.credentials.username
+      if(username === '') {
+        this.showError('Please enter a username');
       }
       else {
-        auth.fakeLogin();
-        //auth.login(this, credentials, '')
+        this.checkAvailability(username);
       }
+    },
+    checkAvailability(username) {
+      if(this.$store.state.users.includes(username)) {
+        this.showError('Username is already being used')
+      }
+      else {
+        this.$store.commit('setCurrentUser', username)
+        auth.fakeLogin()
+      }
+      //auth.login(this, credentials, '')
     },
     showError(msg) {
       alert(msg)
