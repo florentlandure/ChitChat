@@ -36,8 +36,9 @@ export default {
   methods: {
     sendMessage(e, chatName) {
       e.preventDefault()
-
-      this.$store.commit('addMessage', { channel: chatName, content: this.chatInput })
+      const msgData = {channel: chatName, content: this.chatInput, user: this.$store.getters.getCurrentUser}
+      socket.emit('sendMessage', msgData)
+      this.$store.commit('addMessage', msgData)
       this.chatInput = ''
 
       setTimeout(() => {

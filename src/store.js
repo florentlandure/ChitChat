@@ -7,7 +7,6 @@ export const store = new Vuex.Store({
   state: {
     currentChat: 'General',
     currentUser: 'guest',
-    messages: [],
     users: [],
     channels: {
       'General': {
@@ -27,7 +26,7 @@ export const store = new Vuex.Store({
       state.currentChat = name
     },
     addMessage(state, data) {
-      state.channels[data.channel].messages.push({username: state.currentUser, content: data.content})
+      state.channels[data.channel].messages.push({username: data.user, content: data.content})
     },
     addUser(state, username) {
       state.users.push(username)
@@ -50,6 +49,9 @@ export const store = new Vuex.Store({
     },
     getMessages(state, getters) {
       const currentChannel = getters.getCurrentChat
+      socket.on('sendMessage', data => {
+        state.channels[currentChannel].messages.push(data)
+      })
       return state.channels[currentChannel].messages
     },
     getChannels(state) {
