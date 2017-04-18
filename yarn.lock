@@ -4881,7 +4881,7 @@ socket.io-adapter@0.5.0:
     debug "2.3.3"
     socket.io-parser "2.3.1"
 
-socket.io-client@1.7.3:
+socket.io-client@1.7.3, socket.io-client@^1.4.6:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-1.7.3.tgz#b30e86aa10d5ef3546601c09cde4765e381da377"
   dependencies:
@@ -4906,7 +4906,7 @@ socket.io-parser@2.3.1:
     isarray "0.0.1"
     json3 "3.3.2"
 
-socket.io@1.7.3:
+socket.io@1.7.3, socket.io@^1.7.3:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-1.7.3.tgz#b8af9caba00949e568e369f1327ea9be9ea2461b"
   dependencies:
@@ -5421,6 +5421,12 @@ vue-loader@^11.1.4:
 vue-router@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.3.0.tgz#a25c8359e8ca989d22ce79f64322eb0ad0c8670f"
+
+vue-socket.io@^2.1.1-a:
+  version "2.1.1-a"
+  resolved "https://registry.yarnpkg.com/vue-socket.io/-/vue-socket.io-2.1.1-a.tgz#d581691af47759c8d874e99acea22566e2e61894"
+  dependencies:
+    socket.io-client "^1.4.6"
 
 vue-style-loader@^2.0.0:
   version "2.0.4"

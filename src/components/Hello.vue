@@ -3,7 +3,7 @@
     <img id="logo" src="../assets/logo.svg">
     <h1>Welcome to Chit Chat</h1>
     <form>
-      <input class="text-input" type="text" v-model="credentials.username" placeholder="Username">
+      <input class="text-input" type="text" v-model="username" placeholder="Username">
       <!-- <input class="text-input" type="password" v-model="credentials.password" placeholder="Password"> -->
       <button type="submit" class="button" @click="submit">Log in</button>
     </form>
@@ -18,16 +18,13 @@ export default {
   name: 'hello',
   data () {
     return {
-      credentials: {
-        username: '',
-        password: ''
-      }
+      username: ''
     }
   },
   methods: {
     submit (e) {
       e.preventDefault()
-      let username = this.credentials.username
+      let username = this.username
       if(username === '') {
         this.showError('Please enter a username');
       }
@@ -36,14 +33,16 @@ export default {
       }
     },
     checkAvailability(username) {
-      if(this.$store.state.users.includes(username)) {
-        this.showError('Username is already being used')
-      }
-      else {
-        this.$store.commit('setCurrentUser', username)
-        auth.fakeLogin()
-      }
-      //auth.login(this, credentials, '')
+      socket.emit('userLogin', username)
+      socket.on('userLogin', status => {
+        if(status) {
+          this.$store.commit('setCurrentUser', username)
+          this.$router.push('chat')
+        }
+        else {
+          this.showError('Username is already being used')
+        }
+      })
     },
     showError(msg) {
       alert(msg)

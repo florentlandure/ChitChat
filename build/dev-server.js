@@ -23,7 +23,9 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express()
+var server = require('http').Server(app)
 var compiler = webpack(webpackConfig)
+var messages = require('./messages')(server)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
@@ -70,7 +72,7 @@ devMiddleware.waitUntilValid(function () {
   console.log('> Listening at ' + uri + '\n')
 })
 
-module.exports = app.listen(port, function (err) {
+module.exports = server.listen(port, function (err) {
   if (err) {
     console.log(err)
     return
