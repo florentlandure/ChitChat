@@ -2,12 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 Vue.use(Vuex)
-
 export const store = new Vuex.Store({
   state: {
     currentChat: 'General',
-    currentUser: 'guest',
-    users: [],
+    currentUser: '',
     channels: {
       'General': {
         name: 'General',
@@ -26,18 +24,17 @@ export const store = new Vuex.Store({
       state.currentChat = name
     },
     addMessage(state, data) {
-      state.channels[data.channel].messages.push({user: data.user, content: data.content})
-    },
-    addUser(state, username) {
-      state.users.push(username)
+      socket.emit('sendMessage', data)
     },
     setCurrentUser(state, username) {
+      const today = Date.now()
+      const nextWeek = new Date(today + 7 * 24 * 3600 * 1000)
+      const cookie = `username=${username}; expires=${nextWeek}`
       state.currentUser = username
+      document.cookie = cookie
     },
     addMemberToChannel(state, data) {
-      if(! state.channels[data.channel].members.includes(data.username)) {
-        state.channels[data.channel].members.push(data.username)
-      }
+      socket.emit('addMemberToChannel', {channel: data.channel, user: data.username})
     }
   },
   getters: {
@@ -45,21 +42,33 @@ export const store = new Vuex.Store({
       return state.currentChat
     },
     getCurrentUser(state) {
+      if(state.currentUser == '') {
+        const cookies = document.cookie.split(';')
+        let username = '';
+
+        cookies.forEach(c => {
+          const arr = c.split('=');
+          if(arr[0].trim() === 'username') {
+            username = arr[1]
+            return;
+          }
+        })
+
+        if(username !== '') {
+          socket.emit('userLogin', username)
+        }
+        state.currentUser = username
+      }
       return state.currentUser
     },
     getMessages(state, getters) {
       const currentChannel = getters.getCurrentChat
-      socket.on('castMessages', data => {
-        const msgId = state.channels[currentChannel].messages.findIndex(msg => {
-          if(msg.user === data.user && msg.content === data.content && msg.channel === data.channel) {
-            return true;
-          }
-          return false;
-        })
-        if(msgId == -1) {
-          state.channels[currentChannel].messages.push(data)
-        }
+
+      socket.emit('getMessages', currentChannel)
+      socket.on('castMessages', msg => {
+        state.channels[currentChannel].messages = msg;
       })
+      
       return state.channels[currentChannel].messages
     },
     getChannels(state) {
@@ -67,6 +76,12 @@ export const store = new Vuex.Store({
     },
     getMembers(state, getters) {
       const channelName = getters.getCurrentChat
+
+      socket.emit('getMembers', channelName)
+      socket.on('channelMembers', members => {
+        state.channels[channelName].members = members
+      })
+
       return state.channels[channelName].members
     }
   }

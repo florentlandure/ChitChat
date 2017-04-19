@@ -37,7 +37,6 @@ export default {
     sendMessage(e, chatName) {
       e.preventDefault()
       const msgData = {channel: chatName, content: this.chatInput, user: this.$store.getters.getCurrentUser}
-      socket.emit('sendMessage', msgData)
       this.$store.commit('addMessage', msgData)
       this.chatInput = ''
 

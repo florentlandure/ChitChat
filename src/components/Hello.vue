@@ -5,7 +5,7 @@
     <form>
       <input class="text-input" type="text" v-model="username" placeholder="Username">
       <!-- <input class="text-input" type="password" v-model="credentials.password" placeholder="Password"> -->
-      <button type="submit" class="button" @click="submit">Log in</button>
+      <button type="submit" class="button" @click="submit">Chat !</button>
     </form>
     <!-- <p class="italic">Not registered yet ? <a href="/register">Sign up</a></p> -->
   </div>
@@ -26,7 +26,7 @@ export default {
       e.preventDefault()
       let username = this.username
       if(username === '') {
-        this.showError('Please enter a username');
+        alert('Please enter a username');
       }
       else {
         this.checkAvailability(username);
@@ -34,18 +34,18 @@ export default {
     },
     checkAvailability(username) {
       socket.emit('userLogin', username)
-      socket.on('userLogin', status => {
+      socket.once('userLoggedIn', status => {
         if(status) {
+          const currentChat = this.$store.getters.getCurrentChat
+
+          this.$store.commit('addMemberToChannel', {channel: currentChat, username: username})
           this.$store.commit('setCurrentUser', username)
           this.$router.push('chat')
         }
         else {
-          this.showError('Username is already being used')
+          alert('Username is already being used')
         }
       })
-    },
-    showError(msg) {
-      alert(msg)
     }
   }
 }
