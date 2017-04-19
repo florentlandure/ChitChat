@@ -3,7 +3,6 @@
     <h4>Members</h4>
     <ul class="list">
       <li v-for="member in getMembers" class="member-item">
-        <!-- <img :src="member.img" :title="member.name" class="member-image"> -->
         <p class="member-name">{{ member }}</p>
       </li>
     </ul>

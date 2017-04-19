@@ -13,11 +13,9 @@ module.exports = (server) => {
     }
   }
   let users = []
-
   io.on('connection', socket => {
     // User login
     socket.on('userLogin', username => {
-      console.log(socket.id, users)
       const userExists = users.findIndex(user => {
         return user.name === username
       })
@@ -55,22 +53,25 @@ module.exports = (server) => {
     })
     // Socket disconnect
     socket.on('disconnect', () => {
-      const userDC = users.findIndex((user) => {
+      const userDC = users.find((user) => {
         return user.id === socket.id
       })
-      const index = users.indexOf(userDC);
-      if(index != -1) {
-        users.splice(index, 1)
-      }
-      const channelKeys = Object.keys(channels)
-      channelKeys.forEach(k => {
-        const idx = channels[k].members.findIndex(m => {
-          return m === userDC.name
-        })
-        if(idx > -1) {
-          channels[k].members.splice(idx, 1)
+      if(userDC !== undefined) {
+        const index = users.indexOf(userDC);
+        if(index != -1) {
+          users.splice(index, 1)
         }
-      })
+        const channelKeys = Object.keys(channels)
+        channelKeys.forEach(k => {
+          const idx = channels[k].members.findIndex(m => {
+            return m === userDC.name
+          })
+          console.log(userDC, channels[k].members, idx)
+          if(idx > -1) {
+            channels[k].members.splice(idx, 1)
+          }
+        })
+      }
     })
   })
 }

@@ -32,11 +32,10 @@ export default {
   },
   methods: {
     chooseChat(name) {
-      const currentChat = this.$store.getters.getCurrentChat
       const currentUser = this.$store.getters.getCurrentUser
 
       this.$store.commit('switchChat', name)
-      this.$store.commit('addMemberToChannel', {channel: currentChat, username: currentUser})
+      this.$store.commit('addMemberToChannel', {channel: name, username: currentUser})
       document.getElementById('chat-input').focus()
     },
     isCurrentChat(name) {

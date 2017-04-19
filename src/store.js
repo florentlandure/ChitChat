@@ -56,6 +56,7 @@ export const store = new Vuex.Store({
 
         if(username !== '') {
           socket.emit('userLogin', username)
+          socket.emit('addMemberToChannel', {channel: state.currentChannel, user: username})
         }
         state.currentUser = username
       }
@@ -68,7 +69,7 @@ export const store = new Vuex.Store({
       socket.on('castMessages', msg => {
         state.channels[currentChannel].messages = msg;
       })
-      
+
       return state.channels[currentChannel].messages
     },
     getChannels(state) {
@@ -77,7 +78,7 @@ export const store = new Vuex.Store({
     getMembers(state, getters) {
       const channelName = getters.getCurrentChat
 
-      socket.emit('getMembers', channelName)
+      socket.emit('getChannelMembers', channelName)
       socket.on('channelMembers', members => {
         state.channels[channelName].members = members
       })
