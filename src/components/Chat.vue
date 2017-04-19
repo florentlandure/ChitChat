@@ -8,7 +8,7 @@
       </div>
       <div class="chat-body" @click="focusChatInput" id="chat-body">
         <div v-for="message in getMessages" v-if="message.content.trim() !== ''" class="chat-message">
-          <span class="msg-from">{{message.username}}: </span> {{ message.content }}
+          <span class="msg-from">{{message.user}}: </span> {{ message.content }}
         </div>
       </div>
       <form class="chat-input">

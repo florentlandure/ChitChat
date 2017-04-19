@@ -23,7 +23,7 @@ module.exports = (server) => {
     })
     socket.on('sendMessage', data => {
       messages.push(data)
-      socket.broadcast.emit('sendMessage', data)
+      socket.broadcast.emit('castMessages', data)
     })
     // Socket disconnect
     socket.on('disconnect', () => {
