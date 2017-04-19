@@ -1,9 +1,9 @@
 {
-  "name": "vuejs-chat",
+  "name": "ChitChat",
   "version": "1.0.0",
-  "description": "A chat application made with Vue.js",
+  "description": "A chat application made with Vue.js and Socket.io",
   "author": "Florent Landuré <f.landure@gmail.com>",
-  "private": true,
+  "private": false,
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
